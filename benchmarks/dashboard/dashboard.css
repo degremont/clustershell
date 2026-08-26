@@ -84,15 +84,17 @@ td a:hover { text-decoration: underline; }
 .runner-note { margin: 13px 2px 0; color: light-dark(#818a9d, #8490a3); font-size: 10px; }
 
 #regressions-view { max-width: 960px; }
-.regression-table { margin-top: 22px; }
-.regression-header, .regression-row { display: grid; grid-template-columns: minmax(0, 1fr) 110px 115px; gap: 14px; align-items: center; }
+.regression-table { margin-top: 22px; overflow-x: auto; }
+.regression-header, .regression-row { display: grid; grid-template-columns: minmax(210px, 1fr) 90px minmax(230px, 260px); gap: 14px; align-items: center; min-width: 620px; }
 .regression-header { padding: 11px 14px; border-bottom: 1px solid light-dark(#e3e7ef, #2c3648); color: light-dark(#6f7a90, #98a4b7); font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
 .regression-row { padding: 13px 14px; border-bottom: 1px solid light-dark(#e6eaf1, #293344); font-size: 11px; }
 .regression-row:last-child { border-bottom: 0; }
 .regression-name { min-width: 0; overflow-wrap: anywhere; color: light-dark(#344057, #cbd4e1); }
 .regression-name small { display: block; margin-top: 3px; color: light-dark(#7a8497, #929daf); }
 .regression-change { color: #d16a35; font-weight: 800; }
-.regression-revision { color: #2d7bd3; text-decoration: none; }
+.regression-changed { color: #2d7bd3; font-variant-numeric: tabular-nums; text-decoration: none; white-space: nowrap; }
+.regression-changed code { color: inherit; font-size: 10px; }
+.regression-changed:hover { text-decoration: underline; }
 .empty-regressions { padding: 26px 14px; color: light-dark(#69748a, #9ba7ba); font-size: 12px; text-align: center; }
 .error-state { margin-top: 30px; border: 1px solid #d3615d; border-radius: 8px; padding: 16px; background: light-dark(#fff4f3, #2e191c); }
 .error-state strong, .error-state span { display: block; }
@@ -115,5 +117,5 @@ td a:hover { text-decoration: underline; }
   .selectors { justify-content: flex-start; margin: 14px 0 0; }
   .chart-frame { height: 330px; }
   .summary-grid { grid-template-columns: 1fr; }
-  .regression-header, .regression-row { grid-template-columns: minmax(0, 1fr) 62px 68px; gap: 8px; padding-right: 9px; padding-left: 9px; font-size: 10px; }
+  .regression-header, .regression-row { grid-template-columns: minmax(210px, 1fr) 70px minmax(220px, 250px); gap: 8px; min-width: 560px; padding-right: 9px; padding-left: 9px; font-size: 10px; }
 }

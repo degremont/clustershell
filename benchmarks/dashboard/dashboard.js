@@ -49,6 +49,26 @@
     return new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short' }).format(new Date(timestamp));
   }
 
+  function formatIsoDate(timestamp) {
+    return new Date(timestamp).toISOString().slice(0, 10);
+  }
+
+  function chartXPositions(points, left, right, requestedGap) {
+    if (points.length < 2) return [left];
+    const span = Math.max(1, points.at(-1).date - points[0].date);
+    const gap = Math.min(requestedGap, (right - left) / (points.length - 1));
+    const positions = points.map(point => left + ((point.date - points[0].date) / span) * (right - left));
+
+    for (let index = 1; index < positions.length; index += 1) {
+      positions[index] = Math.max(positions[index], positions[index - 1] + gap);
+    }
+    positions[positions.length - 1] = Math.min(positions.at(-1), right);
+    for (let index = positions.length - 2; index >= 0; index -= 1) {
+      positions[index] = Math.min(positions[index], positions[index + 1] - gap);
+    }
+    return positions;
+  }
+
   function revisionLabel(point) {
     return point.tags.length ? point.tags.join(', ') : point.shortHash;
   }
@@ -130,13 +150,12 @@
     svgElement('desc', { id: 'chart-description' }, 'Benchmark duration by release and commit.');
     if (!points.length) return;
 
-    const dates = points.map(point => point.date);
     const values = points.map(point => point.value);
-    const minDate = Math.min(...dates);
-    const maxDate = Math.max(...dates);
     const maxValue = Math.max(...values) * 1.16;
-    const dateSpan = Math.max(1, maxDate - minDate);
-    const x = timestamp => margin.left + ((timestamp - minDate) / dateSpan) * innerWidth;
+    const xPositions = chartXPositions(
+      points, margin.left, width - margin.right, width < 520 ? 30 : 44
+    );
+    const x = index => xPositions[index];
     const y = value => margin.top + innerHeight - (value / maxValue) * innerHeight;
 
     for (let index = 0; index <= 4; index += 1) {
@@ -151,13 +170,13 @@
     const tickIndexes = width < 520 ? [0, points.length - 1] : points.map((_, index) => index).filter((_, index) => index % Math.max(1, Math.ceil(points.length / 5)) === 0);
     [...new Set(tickIndexes)].forEach(index => {
       const point = points[index];
-      svgElement('text', { x: x(point.date), y: height - 18, 'text-anchor': index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle' }, formatDate(point.date));
+      svgElement('text', { x: x(index), y: height - 18, 'text-anchor': index === 0 ? 'start' : index === points.length - 1 ? 'end' : 'middle' }, formatDate(point.date));
     });
 
     let lastTagPosition = -Infinity;
-    points.forEach(point => {
+    points.forEach((point, index) => {
       if (!point.tags.length) return;
-      const position = x(point.date);
+      const position = x(index);
       svgElement('line', { x1: position, x2: position, y1: margin.top, y2: height - margin.bottom, class: 'tag-line' });
       if (position - lastTagPosition >= (width < 520 ? 58 : 42)) {
         svgElement('text', { x: position + 4, y: margin.top + 11, class: 'tag-label' }, point.tags.join(', '));
@@ -165,14 +184,14 @@
       }
     });
 
-    const path = points.map((point, index) => `${index ? 'L' : 'M'} ${x(point.date)} ${y(point.value)}`).join(' ');
-    const area = `${path} L ${x(points.at(-1).date)} ${height - margin.bottom} L ${x(points[0].date)} ${height - margin.bottom} Z`;
+    const path = points.map((point, index) => `${index ? 'L' : 'M'} ${x(index)} ${y(point.value)}`).join(' ');
+    const area = `${path} L ${x(points.length - 1)} ${height - margin.bottom} L ${x(0)} ${height - margin.bottom} Z`;
     svgElement('path', { d: area, class: 'chart-area' });
     svgElement('path', { d: path, class: 'chart-line' });
 
     points.forEach((point, index) => {
       const marker = svgElement('circle', {
-        cx: x(point.date), cy: y(point.value), r: 5,
+        cx: x(index), cy: y(point.value), r: 5,
         class: `chart-point${index === points.length - 1 ? ' latest' : ''}`,
         tabindex: 0,
         'aria-label': `${revisionLabel(point)}: ${formatDuration(point.value)}`
@@ -180,7 +199,7 @@
       const showTooltip = () => {
         elements.tooltip.innerHTML = `<strong>${revisionLabel(point)}</strong><code>${point.shortHash}</code><br>${formatDuration(point.value)} · ${formatDate(point.date)}`;
         elements.tooltip.style.display = 'block';
-        elements.tooltip.style.left = `${Math.min(width - 185, Math.max(5, x(point.date) - 70))}px`;
+        elements.tooltip.style.left = `${Math.min(width - 185, Math.max(5, x(index) - 70))}px`;
         elements.tooltip.style.top = `${Math.max(3, y(point.value) - 76)}px`;
       };
       marker.addEventListener('mouseenter', showTooltip);
@@ -241,8 +260,9 @@
       benchmark.series.forEach(series => {
         series.points.forEach((point, index) => {
           if (index === 0) return;
-          const change = formatChange(point.value, series.points[index - 1].value);
-          if (change >= 10) regressions.push({ benchmark, series, point, change });
+          const previous = series.points[index - 1];
+          const change = formatChange(point.value, previous.value);
+          if (change >= 10) regressions.push({ benchmark, series, previous, point, change });
         });
       });
     });
@@ -271,13 +291,16 @@
       const change = document.createElement('span');
       change.className = 'regression-change';
       change.textContent = `+${regression.change.toFixed(1)}%`;
-      const revision = document.createElement('a');
-      revision.className = 'regression-revision';
-      revision.href = regression.point.url;
-      revision.target = '_blank';
-      revision.rel = 'noopener';
-      revision.textContent = revisionLabel(regression.point);
-      row.append(name, change, revision);
+      const changedAt = document.createElement('a');
+      changedAt.className = 'regression-changed';
+      changedAt.href = `${state.data.project.repositoryUrl}/compare/${regression.previous.hash}...${regression.point.hash}`;
+      changedAt.target = '_blank';
+      changedAt.rel = 'noopener';
+      changedAt.append(`${formatIsoDate(regression.point.date)} `);
+      const commitRange = document.createElement('code');
+      commitRange.textContent = `${regression.previous.shortHash}...${regression.point.shortHash}`;
+      changedAt.appendChild(commitRange);
+      row.append(name, change, changedAt);
       elements.regressionList.appendChild(row);
     });
   }
