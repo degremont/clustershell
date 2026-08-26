@@ -66,11 +66,16 @@ jobs:
       - name: Generate the static dashboard
         run: asv publish --no-pull
 
+      - name: Build the ClusterShell dashboard
+        run: python benchmarks/build_dashboard.py
+
       - name: Update only the performance directories
         run: |
           set -euxo pipefail
           mkdir -p _pages/performance _pages/performance-results
-          rsync -a --delete .asv/html/ _pages/performance/
+          rsync -a --delete .asv/custom-dashboard/ _pages/performance/
+          mkdir -p _pages/performance/asv
+          rsync -a --delete .asv/html/ _pages/performance/asv/
           rsync -a --delete .asv/results/ _pages/performance-results/
           touch _pages/.nojekyll
 

@@ -29,8 +29,13 @@ Generate and serve the static dashboard:
 
 ```console
 /tmp/clustershell-asv/bin/asv publish --no-pull
-/tmp/clustershell-asv/bin/asv preview
+python3 benchmarks/build_dashboard.py
+python3 -m http.server --directory .asv/custom-dashboard
 ```
+
+The custom ClusterShell interface is generated in `.asv/custom-dashboard`.
+The standard ASV interface remains available in `.asv/html` and is published
+online below `performance/asv/` as a fallback and detailed expert view.
 
 ## Online demonstrator
 
@@ -40,8 +45,11 @@ Pushing the `codex/issue-708-asv-demo` branch runs
 1. benchmarks releases `v1.8`, `v1.9`, `v1.10`, `v1.10.1`, and `master`;
 2. restores and updates the raw ASV data stored in
    `gh-pages/performance-results/`;
-3. publishes the dashboard to `gh-pages/performance/` without modifying the
-   existing site at the root of the branch.
+3. transforms the ASV files into the data model used by the ClusterShell
+   interface;
+4. publishes the custom dashboard to `gh-pages/performance/` and the standard
+   ASV view to `gh-pages/performance/asv/`, without modifying the existing site
+   at the root of the branch.
 
 Once the workflow completes, the expected URL is:
 
