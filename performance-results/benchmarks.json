@@ -1,0 +1,267 @@
+{
+    "bench_nodeset.NodeSetOperations.time_difference_overlap": {
+        "code": "class NodeSetOperations:\n    def time_difference_overlap(self, size):\n        self.left.difference(self.right)\n\n    def setup(self, size):\n        self.left = NodeSet(\"node[1-%d]\" % size,\n                            resolver=RESOLVER_NOGROUP)\n        self.right = NodeSet(\"node[%d-%d]\" %\n                             (size // 2, size + size // 2),\n                             resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetOperations.time_difference_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "3126fa8502c2860943d7c5e8219e1858fff831893e20ee5df4d90fae2df874f7",
+        "warmup_time": 0.1
+    },
+    "bench_nodeset.NodeSetOperations.time_intersection_overlap": {
+        "code": "class NodeSetOperations:\n    def time_intersection_overlap(self, size):\n        self.left.intersection(self.right)\n\n    def setup(self, size):\n        self.left = NodeSet(\"node[1-%d]\" % size,\n                            resolver=RESOLVER_NOGROUP)\n        self.right = NodeSet(\"node[%d-%d]\" %\n                             (size // 2, size + size // 2),\n                             resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetOperations.time_intersection_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "87b0362a8108ad9a2c9cca5f46d21b913343f6c9cb20bf5c091a502f5e6391af",
+        "warmup_time": 0.1
+    },
+    "bench_nodeset.NodeSetOperations.time_union_overlap": {
+        "code": "class NodeSetOperations:\n    def time_union_overlap(self, size):\n        self.left.union(self.right)\n\n    def setup(self, size):\n        self.left = NodeSet(\"node[1-%d]\" % size,\n                            resolver=RESOLVER_NOGROUP)\n        self.right = NodeSet(\"node[%d-%d]\" %\n                             (size // 2, size + size // 2),\n                             resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetOperations.time_union_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "3394863b808ca3e91fe743a72c142aea9f063997b6e2545cf8fc20088ec0f043",
+        "warmup_time": 0.1
+    },
+    "bench_nodeset.NodeSetParsing.time_fold": {
+        "code": "class NodeSetParsing:\n    def time_fold(self, size):\n        str(self.nodeset)\n\n    def setup(self, size):\n        self.compact_pattern = \"node[1-%d]\" % size\n        axis = max(10, int(size ** 0.5))\n        self.multidimensional_pattern = \"rack[1-%d]node[1-%d]\" % (axis, axis)\n        self.nodeset = NodeSet(self.compact_pattern,\n                               resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetParsing.time_fold",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "c9dd29d6c1f45f26b97c3a5d6f843824a3525248dba4dd42a482ba5bc6ae31ec",
+        "warmup_time": 0.1
+    },
+    "bench_nodeset.NodeSetParsing.time_parse_compact": {
+        "code": "class NodeSetParsing:\n    def time_parse_compact(self, size):\n        NodeSet(self.compact_pattern, resolver=RESOLVER_NOGROUP)\n\n    def setup(self, size):\n        self.compact_pattern = \"node[1-%d]\" % size\n        axis = max(10, int(size ** 0.5))\n        self.multidimensional_pattern = \"rack[1-%d]node[1-%d]\" % (axis, axis)\n        self.nodeset = NodeSet(self.compact_pattern,\n                               resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetParsing.time_parse_compact",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "23176248cf86d1aeb51b6b3d57cb33e9246d1d51d938929c9b3cbdc8433acd69",
+        "warmup_time": 0.1
+    },
+    "bench_nodeset.NodeSetParsing.time_parse_multidimensional": {
+        "code": "class NodeSetParsing:\n    def time_parse_multidimensional(self, size):\n        NodeSet(self.multidimensional_pattern, resolver=RESOLVER_NOGROUP)\n\n    def setup(self, size):\n        self.compact_pattern = \"node[1-%d]\" % size\n        axis = max(10, int(size ** 0.5))\n        self.multidimensional_pattern = \"rack[1-%d]node[1-%d]\" % (axis, axis)\n        self.nodeset = NodeSet(self.compact_pattern,\n                               resolver=RESOLVER_NOGROUP)",
+        "min_run_count": 2,
+        "name": "bench_nodeset.NodeSetParsing.time_parse_multidimensional",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "a349c110b03f1f839710e5ccfc460c2d4fe97e475be27b5386f9c49cc9d575b8",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetOperations.time_difference_overlap": {
+        "code": "class RangeSetOperations:\n    def time_difference_overlap(self, size):\n        self.left.difference(self.right)\n\n    def setup(self, size):\n        self.left = RangeSet(\"1-%d\" % size)\n        self.right = RangeSet(\"%d-%d\" % (size // 2, size + size // 2))",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetOperations.time_difference_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "8120e850664646a59a5ccb8ccc1164b9def5a84e792688b19b7834a8c11c0103",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetOperations.time_intersection_overlap": {
+        "code": "class RangeSetOperations:\n    def time_intersection_overlap(self, size):\n        self.left.intersection(self.right)\n\n    def setup(self, size):\n        self.left = RangeSet(\"1-%d\" % size)\n        self.right = RangeSet(\"%d-%d\" % (size // 2, size + size // 2))",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetOperations.time_intersection_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "2ef1d55b0d711643cfb7bff20c7c9bfa4aac39fc9ed0f8f884ff6aea331af81e",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetOperations.time_union_overlap": {
+        "code": "class RangeSetOperations:\n    def time_union_overlap(self, size):\n        self.left.union(self.right)\n\n    def setup(self, size):\n        self.left = RangeSet(\"1-%d\" % size)\n        self.right = RangeSet(\"%d-%d\" % (size // 2, size + size // 2))",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetOperations.time_union_overlap",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "0d11f88b0544f0c0a16712c8878f8a93e51fa7ab2c39099f2be497d0207a5164",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetParsing.time_fold_autostep": {
+        "code": "class RangeSetParsing:\n    def time_fold_autostep(self, size):\n        str(self.fragmented)\n\n    def setup(self, size):\n        self.compact_pattern = \"1-%d\" % size\n        self.fragmented_pattern = \",\".join(str(index)\n                                           for index in range(1, size, 3))\n        self.fragmented = RangeSet(self.fragmented_pattern, autostep=3)",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetParsing.time_fold_autostep",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "abaa9ce93adf47960d2ae3e649778ff7b53fbef7e41c86fd867a288b67a58549",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetParsing.time_parse_compact": {
+        "code": "class RangeSetParsing:\n    def time_parse_compact(self, size):\n        RangeSet(self.compact_pattern)\n\n    def setup(self, size):\n        self.compact_pattern = \"1-%d\" % size\n        self.fragmented_pattern = \",\".join(str(index)\n                                           for index in range(1, size, 3))\n        self.fragmented = RangeSet(self.fragmented_pattern, autostep=3)",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetParsing.time_parse_compact",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "83cebf88c5c32d1d02d0ab2c303b8dc35961a8e3495675f14ae82fb9b8a0b70f",
+        "warmup_time": 0.1
+    },
+    "bench_rangeset.RangeSetParsing.time_parse_fragmented": {
+        "code": "class RangeSetParsing:\n    def time_parse_fragmented(self, size):\n        RangeSet(self.fragmented_pattern)\n\n    def setup(self, size):\n        self.compact_pattern = \"1-%d\" % size\n        self.fragmented_pattern = \",\".join(str(index)\n                                           for index in range(1, size, 3))\n        self.fragmented = RangeSet(self.fragmented_pattern, autostep=3)",
+        "min_run_count": 2,
+        "name": "bench_rangeset.RangeSetParsing.time_parse_fragmented",
+        "number": 0,
+        "param_names": [
+            "size"
+        ],
+        "params": [
+            [
+                "1000",
+                "100000"
+            ]
+        ],
+        "repeat": 5,
+        "rounds": 2,
+        "sample_time": 0.05,
+        "type": "time",
+        "unit": "seconds",
+        "version": "2598a3301f19a9ee6deebdb01d824e246d5bdf1b4d3275b47a426f7d500bc78e",
+        "warmup_time": 0.1
+    },
+    "version": 2
+}
