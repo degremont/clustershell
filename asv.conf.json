@@ -1,0 +1,29 @@
+{
+    "version": 1,
+    "project": "ClusterShell",
+    "project_url": "https://github.com/clustershell/clustershell",
+    "repo": ".",
+    "branches": [
+        "master"
+    ],
+    "show_commit_url": "https://github.com/clustershell/clustershell/commit/",
+    "pythons": [
+        "3.12"
+    ],
+    "environment_type": "virtualenv",
+    "matrix": {
+        "req": {
+            "PyYAML": []
+        }
+    },
+    "build_command": [
+        "python -m pip wheel --no-deps -w {build_cache_dir} {build_dir}"
+    ],
+    "benchmark_dir": "benchmarks",
+    "env_dir": ".asv/env",
+    "results_dir": ".asv/results",
+    "html_dir": ".asv/html",
+    "build_cache_size": 2,
+    "install_timeout": 300,
+    "default_benchmark_timeout": 60
+}
